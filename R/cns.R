@@ -28,7 +28,7 @@ cns <- function(descriptions, ...) {
   c(descriptions, ...)  |>
     trimws()            |>
     tolower()           |>
-    strsplit('[ _]+')   |>
+    strsplit('[ _-]+')  |>
     lapply(matchCNS)    |>
     vapply(cns2rgb, "") |>
     structure(class='cns')
@@ -67,26 +67,21 @@ matchCNS <- function(tokens) {
   )
 
   HUE <- "hue"
-  DONE <- FALSE
 
   for(t in tokens) {
 
-    if(!is.na(ret["hue"])) HUE <- "hue2"
-
     switch(t,
-           black =,
-           white = { ret["lightness"] <- t; DONE = TRUE},
 
-           very =  { ret["very"] <- t; },
+           very = { ret["very"] <- t },
 
-           dark =,
+           black  =,
+           white  =,
+           dark   =,
            medium =,
-           light = { ret["lightness"] <- t; },
+           light  = { ret["lightness"] <- t },
 
-
-
-           grey = ,
-           gray = { ret["saturation"] <- "gray"; DONE = TRUE},
+           grey =,
+           gray = { ret["saturation"] <- "gray"},
 
            greyish  =,
            grayish  =,
@@ -100,7 +95,7 @@ matchCNS <- function(tokens) {
            yellowish =,
            greenish  =,
            bluish    =,
-           purplish  = { ret <- ish(ret, t) },
+           purplish  = { ret <- ish(ret, t) ; HUE <- "hue2" },
 
            red     =,
            orange  =,
@@ -108,7 +103,7 @@ matchCNS <- function(tokens) {
            yellow  =,
            green   =,
            blue    =,
-           purple  = { ret[HUE] <- t },
+           purple  = { ret[HUE] <- t ; HUE <- "hue2" },
 
 
            ## default
@@ -122,7 +117,19 @@ matchCNS <- function(tokens) {
 }
 
 
-
+col2hue <- function(col) {
+  switch(col,
+         red     = 0.0,
+         orange  = 0.1078,
+         brown   = 0.1078,
+         yellow  = 1 / 6,
+         green   = 1 / 3,
+         blue    = 2 / 3,
+         purple  = 0.7692,
+         gray    = 0,
+         rgb2hsv(col2rgb(col))["h",]
+         )
+}
 
 
 cns2rgb <- function(x){
@@ -143,56 +150,53 @@ cns2rgb <- function(x){
   }
 
 
-  h1 <- x["hue"] |> col2rgb() |> rgb2hsv()
+  h <- col2hue(x["hue"])
 
   if(!is.na(x["hue2"])) {
 
-    h2 <- x["hue2"] |> col2rgb() |> rgb2hsv()
+    h2 <- col2hue(x["hue2"])
 
 
-    theta1 <- h1["h",]
-    theta2 <- h2["h",]
-
-    if(theta2 - theta1 > .5) {
-      theta1 <- theta1 + 1
-    } else if (theta2 - theta1 < -.5) {
-      theta2 <- theta2 + 1
+    if(h2 - h > .5) {
+      h <- h + 1
+    } else if (h2 - h < -.5) {
+      h2 <- h2 + 1
     }
 
     # ish colors are 3/4 hue2, 1/4 hue 1
     if(!is.na(x["ish"])) {
 
-      h1["h",] <- 3/4*theta2 + 1/4*theta1
+      h <- 3/4*h2 + 1/4*h
 
     } else {
 
-      h1["h",] <- 1/2*theta2 + 1/2*theta1
+      h <- 1/2*h2 + 1/2*h
 
     }
 
   }
 
-  h1["s",] <- switch(x["saturation"],
-                     gray=0,
-                     grayish=.25,
-                     moderate=.5,
-                     strong=.75,
-                     vivid=1)
+  s <- switch(x["saturation"],
+              gray     = 0,
+              grayish  = 1/4,
+              moderate = 2/4,
+              strong   = 3/4,
+              vivid    = 1)
 
-  h1["v",] <- switch(paste0(x["very"], x["lightness"]),
-                     veryblack=,
-                     black = 0,
-                     verydark =.1,
-                     dark = .3,
-                     medium = .5,
-                     light = .7,
-                     verylight = .9,
-                     verywhite=,
-                     white = 1)
+  v <- switch(paste0(x["very"], x["lightness"]),
+              veryblack =,
+              black     = 0,
+              verydark  = 1/6,
+              dark      = 2/6,
+              medium    = 3/6,
+              light     = 4/6,
+              verylight = 5/6,
+              verywhite =,
+              white     = 1)
 
 
 
-  hsv(h1["h",], h1["s",], h1["v",])
+  hsv(h, s, v)
 
 }
 
@@ -204,5 +208,9 @@ cns2rgb <- function(x){
 
 #x <- cns("light bluish purple")[[1]]
 
+barplot(matrix(1, 32, 6), col=
+
+cns(do.call(paste, expand.grid("white",c("grayish", "moderate", "strong", "vivid"), c("red", "orange", "brown", "yellow", "green", "blue", "purple"))))
 
 
+)
