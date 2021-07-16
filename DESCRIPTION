@@ -4,7 +4,7 @@ Title: Color Naming System
 Version: 0.1.0
 Author: Neal Fultz <nfultz@gmail.com>
 Maintainer: Neal Fultz <nfultz@gmail.com>
-Description: The Color Naming System was an early gramaar of colors that is 
+Description: The Color Naming System was an early grammar of color that is 
     more user friendly than `RGB`, by Berk, Brownstone and Kaufman (1982) 
     <doi:10.1109/MCG.1982.1674223>.
 Encoding: UTF-8

@@ -97,20 +97,20 @@ matchCNS <- function(tokens) {
            bluish    =,
            purplish  = { ret <- ish(ret, t) ; HUE <- "hue2" },
 
+           ish = { ret['ish'] <- t; HUE <- "hue2" },
+
            red     =,
            orange  =,
            brown   =,
            yellow  =,
            green   =,
            blue    =,
-           purple  = { ret[HUE] <- t ; HUE <- "hue2" },
-
+           purple  =,
 
            ## default
-           warning(t, " not recognized.")
+           { ret[HUE] <- t ; HUE <- "hue2" }
 
-           )
-    #print(t)
+     )
   }
 
   ret
@@ -178,6 +178,7 @@ cns2rgb <- function(x){
 
   s <- switch(x["saturation"],
               gray     = 0,
+              greyish  = 1/4,
               grayish  = 1/4,
               moderate = 2/4,
               strong   = 3/4,
@@ -208,9 +209,9 @@ cns2rgb <- function(x){
 
 #x <- cns("light bluish purple")[[1]]
 
-barplot(matrix(1, 32, 6), col=
+barplot(matrix(1, 28, 6), col=
 
-cns(do.call(paste, expand.grid("white",c("grayish", "moderate", "strong", "vivid"), c("red", "orange", "brown", "yellow", "green", "blue", "purple"))))
+cns(do.call(paste, expand.grid(c("very light"),c("grayish", "moderate", "strong", "vivid"), c("red", "orange", "brown", "yellow", "green", "blue", "purple"))))
 
 
 )
