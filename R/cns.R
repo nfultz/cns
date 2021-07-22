@@ -1,18 +1,3 @@
-# Hello, world!
-#
-# This is an example function named 'hello'
-# which prints 'Hello, world!'.
-#
-# You can learn more about package authoring with RStudio at:
-#
-#   http://r-pkgs.had.co.nz/
-#
-# Some useful keyboard shortcuts for package authoring:
-#
-#   Install Package:           'Ctrl + Shift + B'
-#   Check Package:             'Ctrl + Shift + E'
-#   Test Package:              'Ctrl + Shift + T'
-
 # cns(c(
 #   "black",
 #   "white",
@@ -34,6 +19,7 @@ cns <- function(descriptions, ...) {
     structure(class='cns')
 
 }
+
 
 ish <- function(ret, t) {
   stopifnot('splash colors are not allowed in the second position'=is.na(ret["hue"]))
@@ -118,6 +104,7 @@ matchCNS <- function(tokens) {
 
 
 col2hue <- function(col) {
+
   switch(col,
          red     = 0.0,
          orange  = 0.1078,
@@ -129,6 +116,7 @@ col2hue <- function(col) {
          gray    = 0,
          rgb2hsv(col2rgb(col))["h",]
          )
+
 }
 
 
@@ -195,23 +183,6 @@ cns2rgb <- function(x){
               verywhite =,
               white     = 1)
 
-
-
   hsv(h, s, v)
 
 }
-
-
-
-#rgb2hsv(col2rgb(c("red", "orange", "yellow", "green", "blue", "purple")))
-
-
-
-#x <- cns("light bluish purple")[[1]]
-
-barplot(matrix(1, 28, 6), col=
-
-cns(do.call(paste, expand.grid(c("very light"),c("grayish", "moderate", "strong", "vivid"), c("red", "orange", "brown", "yellow", "green", "blue", "purple"))))
-
-
-)
