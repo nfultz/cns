@@ -22,6 +22,7 @@ cns <- function(descriptions, ...) {
 
 
 ish <- function(ret, t) {
+
   stopifnot('splash colors are not allowed in the second position'=is.na(ret["hue"]))
 
   ret["hue"] <- switch(t,
@@ -123,18 +124,16 @@ col2hue <- function(col) {
 cns2rgb <- function(x){
 
   if(is.na(x['hue'])) {
-    if(x["lightness"] == "white") {
-      return("#FFFFFF")
-    }
 
-    if(x["lightness"] == "black") {
+    if(x["lightness"] == "white")
+      return("#FFFFFF")
+
+    if(x["lightness"] == "black")
       return("#000000")
 
-    }
+    if(x["saturation"] == "gray")
+      x["hue"] <- "gray"
 
-    if(x["saturation"] == "gray") {
-      x["hue"] = "gray"
-    }
   }
 
 
@@ -151,16 +150,11 @@ cns2rgb <- function(x){
       h2 <- h2 + 1
     }
 
-    # ish colors are 3/4 hue2, 1/4 hue 1
-    if(!is.na(x["ish"])) {
+    # normal blend is 1:1
+    #  *-ish blend is 3:1
+    ish <- ifelse(!is.na(x["ish"]), 1/4, 0)
 
-      h <- 3/4*h2 + 1/4*h
-
-    } else {
-
-      h <- 1/2*h2 + 1/2*h
-
-    }
+    h  <- (1/2 + ish) * h2 + (1/2 - ish) * h
 
   }
 

@@ -1,7 +1,7 @@
 Package: cns
 Type: Package
 Title: Color Naming System
-Version: 0.1.0
+Version: 0.3.0
 Author: Neal Fultz <nfultz@gmail.com>
 Maintainer: Neal Fultz <nfultz@gmail.com>
 Description: The Color Naming System was an early grammar of color that is 
